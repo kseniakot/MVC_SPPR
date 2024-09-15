@@ -1,13 +1,24 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using WEB_253503_KOTOVA.Models;
 
 namespace WEB_253503_KOTOVA.Controllers
 {
     public class Home : Controller
     {
-        // GET: HomeController
+        [ViewData]
+        public List<ListDemo> ListDemos { get; set; } = new() {
+    new ListDemo { Id = 0, Name = "Item-1" },
+    new ListDemo { Id = 1, Name = "Item-2" },
+    new ListDemo { Id = 2, Name = "Item-3" }
+
+};
         public ActionResult Index()
         {
+            ViewData["LabTitle"] = "Лабораторная работа №2";
+            ViewBag.SelectList = new SelectList(ListDemos, "Id", "Name");
+
             return View();
         }
 
