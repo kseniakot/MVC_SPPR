@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace WEB_253503_KOTOVA.Domain.Entities
 {
-    internal class Category
+    public class Category
     {
 
         public int Id { get; set; }
