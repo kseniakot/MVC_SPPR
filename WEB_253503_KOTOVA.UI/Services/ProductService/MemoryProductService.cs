@@ -34,27 +34,27 @@ namespace WEB_253503_KOTOVA.UI.Services.ProductService
         {
             new Dish { Id = 1, Name = "Суп-харчо",
                 Description = "Очень острый, невкусный",
-                Calories = 200, Image = "Images/Soup.jpg",
+                Calories = 200, Image = "images/harcho.jpg",
                 Category = _categories.Find(c => c.NormalizedName.Equals("soups"))
             },
             new Dish { Id = 2, Name = "Борщ",
                 Description = "Много сала, без сметаны",
-                Calories = 330, Image = "Images/Borsch.jpg",
+                Calories = 330, Image = "images/borsch.jpg",
                 Category = _categories.Find(c => c.NormalizedName.Equals("soups"))
             },
             new Dish { Id = 3, Name = "Цезарь",
                 Description = "Салат с курицей",
-                Calories = 400, Image = "Images/Chesar.jpg",
+                Calories = 400, Image = "images/Chesar.jpg",
                 Category = _categories.Find(c => c.NormalizedName.Equals("salads"))
             },
             new Dish { Id = 4, Name = "Компот",
                 Description = "Сладкий напиток",
-                Calories = 120, Image = "Images/Compot.jpg",
+                Calories = 120, Image = "images/compot.jpg",
                 Category = _categories.Find(c => c.NormalizedName.Equals("drinks"))
             },
             new Dish { Id = 5, Name = "Пирожное",
                 Description = "Десерт со сливками",
-                Calories = 500, Image = "Images/Cake.jpg",
+                Calories = 500, Image = "images/choco_cake.jpg",
                 Category = _categories.Find(c => c.NormalizedName.Equals("desserts"))
             }
         };
