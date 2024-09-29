@@ -11,8 +11,7 @@ namespace WEB_253503_KOTOVA.UI.Services.ProductService
         /// <param name="categoryNormalizedName">нормализованное имя категории для  фильтрации</param>
         /// <param name="pageNo">номер страницы списка</param>
         /// <returns></returns>
-        public Task<ResponseData<ListModel<Dish>>> GetProductListAsync(string?
-        categoryNormalizedName, int pageNo = 1);
+        public Task<ResponseData<ListModel<Dish>>> GetProductListAsync(string? categoryNormalizedName, int pageNo = 1);
         /// <summary>
         /// Поиск объекта по Id
         /// </summary>
