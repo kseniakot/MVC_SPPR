@@ -16,12 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="wwwroot\images\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\WEB_253503_KOTOVA.Domain\WEB_253503_KOTOVA.Domain.csproj" />
-    <ProjectReference Include="..\WEB_253503_KOTOVA.UI\WEB_253503_KOTOVA.UI.csproj" />
   </ItemGroup>
 
 </Project>

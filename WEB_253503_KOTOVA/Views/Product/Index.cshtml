@@ -1,27 +1,70 @@
 ﻿@model WEB_253503_KOTOVA.Domain.Models.ListModel<WEB_253503_KOTOVA.Domain.Entities.Dish>
 
-<h2>Список продуктов</h2>
 
-<table class="table table-striped">
-    <thead>
-        <tr>
-            <th>Название</th>
-            <th>Описание</th>
-            <th>Калории</th>
-            <th>Категория</th>
-            <th>Изображение</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var dish in Model.Items)
-        {
-            <tr>
-                <td>@dish.Name</td>
-                <td>@dish.Description</td>
-                <td>@dish.Calories</td>
-                <td>@dish.Category?.Name</td>
-                <td><img src="@dish.Image" alt="@dish.Name" style="width:100px;" /></td>
-            </tr>
-        }
-    </tbody>
-</table>
+@{
+    var request = ViewContext.HttpContext.Request;
+    var returnUrl = request.Path + request.QueryString.ToUriComponent();
+}
+
+<h2>Блюда дня</h2>
+
+<!-- Выбор категории (выпадающий список) -->
+<div class="row mb-4">
+    <div class="col-2">
+        <ul class="nav">
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">
+                    @ViewData["currentCategory"]
+                </a>
+
+                <ul class="dropdown-menu">
+                    <li>
+                        <a class="dropdown-item" asp-controller="Product" asp-action="Index" asp-route-category="@null">Все</a>
+                    </li>
+                    @if (ViewBag.Categories != null) // Добавлена проверка на null
+                    {
+                        foreach (var item in ViewBag.Categories)
+                        {
+                            <li>
+                                <a class="dropdown-item" asp-controller="Product" asp-action="Index" asp-route-category="@item.NormalizedName">
+                                    @item.Name
+                                </a>
+                            </li>
+                        }
+                    }
+                </ul>
+            </li>
+        </ul>
+    </div>
+</div>
+
+<!-- Список блюд в виде карточек -->
+<div class="row row-cols-1 row-cols-md-3 g-4">
+    @foreach (var dish in Model.Items)
+    {
+        <div class="col">
+            <div class="card h-100">
+                <img src="@dish.Image" class="card-img-top" alt="@dish.Name" style="height: 200px; object-fit: cover" />
+                <div class="card-body">
+                    <h5 class="card-title">@dish.Name</h5>
+                    <p class="card-text">@dish.Description</p>
+                    <div class="border bg-light p-2 mt-3" style="font-weight: bold; background-color: #f8f9fa; width: fit-content;">
+                        @dish.Calories калорий
+                    </div>
+                </div>
+                <div class="card-footer text-center">
+                    <form asp-controller="Cart" asp-action="Add" method="post">
+                        <input type="hidden" name="id" value="@dish.Id" />
+                        <input type="hidden" name="returnUrl" value="@returnUrl" />
+                        <button type="submit" class="btn btn-primary"
+                                data-id="@dish.Id"
+                                data-returnurl="@returnUrl"
+                                title="Добавить в корзину: @dish.Name (Id: @dish.Id)">
+                            <i class="bi bi-cart"></i> Add to cart
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    }
+</div>
