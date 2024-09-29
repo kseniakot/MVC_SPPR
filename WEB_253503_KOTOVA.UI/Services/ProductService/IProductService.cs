@@ -11,15 +11,15 @@ namespace WEB_253503_KOTOVA.UI.Services.ProductService
         /// <param name="categoryNormalizedName">нормализованное имя категории для  фильтрации</param>
         /// <param name="pageNo">номер страницы списка</param>
         /// <returns></returns>
-        //public Task<ResponseData<ListModel<Dish>>> GetProductListAsync(string?
-        //categoryNormalizedName, int pageNo = 1);
+        public Task<ResponseData<ListModel<Dish>>> GetProductListAsync(string?
+        categoryNormalizedName, int pageNo = 1);
         /// <summary>
         /// Поиск объекта по Id
         /// </summary>
         /// <param name="id">Идентификатор объекта</param>
         /// <returns>Найденный объект или null, если объект не найден</returns>
-        //public Task<ResponseData<Dish>> GetProductByIdAsync(int id);
-        ///// <summary>
+       // public Task<ResponseData<Dish>> GetProductByIdAsync(int id);
+        /// <summary>
         /// Обновление объекта
         /// </summary>
         /// <param name="id">Id изменяемомго объекта</param>
@@ -41,7 +41,9 @@ namespace WEB_253503_KOTOVA.UI.Services.ProductService
         /// <returns>Созданный объект</returns>
 
 
-        ////public Task<ResponseData<Dish>> CreateProductAsync(Dish product, IFormFile?
-        ////formFile);
+        //public Task<ResponseData<Dish>> CreateProductAsync(Dish product, IFormFile?
+        //formFile);
+
+
     }
 }

@@ -34,27 +34,27 @@ namespace WEB_253503_KOTOVA.UI.Services.ProductService
         {
             new Dish { Id = 1, Name = "Суп-харчо",
                 Description = "Очень острый, невкусный",
-                Calories = 200, Image = "Images/Суп.jpg",
+                Calories = 200, Image = "Images/Soup.jpg",
                 Category = _categories.Find(c => c.NormalizedName.Equals("soups"))
             },
             new Dish { Id = 2, Name = "Борщ",
                 Description = "Много сала, без сметаны",
-                Calories = 330, Image = "Images/Борщ.jpg",
+                Calories = 330, Image = "Images/Borsch.jpg",
                 Category = _categories.Find(c => c.NormalizedName.Equals("soups"))
             },
             new Dish { Id = 3, Name = "Цезарь",
                 Description = "Салат с курицей",
-                Calories = 400, Image = "Images/Цезарь.jpg",
+                Calories = 400, Image = "Images/Chesar.jpg",
                 Category = _categories.Find(c => c.NormalizedName.Equals("salads"))
             },
             new Dish { Id = 4, Name = "Компот",
                 Description = "Сладкий напиток",
-                Calories = 120, Image = "Images/Компот.jpg",
+                Calories = 120, Image = "Images/Compot.jpg",
                 Category = _categories.Find(c => c.NormalizedName.Equals("drinks"))
             },
             new Dish { Id = 5, Name = "Пирожное",
                 Description = "Десерт со сливками",
-                Calories = 500, Image = "Images/Пирожное.jpg",
+                Calories = 500, Image = "Images/Cake.jpg",
                 Category = _categories.Find(c => c.NormalizedName.Equals("desserts"))
             }
         };
@@ -65,28 +65,13 @@ namespace WEB_253503_KOTOVA.UI.Services.ProductService
         /// </summary>
         public Task<ResponseData<ListModel<Dish>>> GetProductListAsync(string? categoryNormalizedName, int pageNo = 1)
         {
-            // Фильтруем список по категории
-            var filteredDishes = _dishes
-                .Where(d => categoryNormalizedName == null || d.Category.NormalizedName.Equals(categoryNormalizedName))
-                .ToList();
-
-            // Вычисляем общее количество страниц
-            var totalPages = (int)Math.Ceiling(filteredDishes.Count / (double)_itemsPerPage);
-
-            // Получаем данные для нужной страницы
-            var dishesOnPage = filteredDishes
-                .Skip((pageNo - 1) * _itemsPerPage)
-                .Take(_itemsPerPage)
-                .ToList();
-
-            // Формируем результат
+            var filteredDishes = _dishes.Where(d => categoryNormalizedName == null || d.Category.NormalizedName.Equals(categoryNormalizedName)).ToList();
             var result = new ListModel<Dish>
             {
-                Items = dishesOnPage,
+                Items = filteredDishes,
                 CurrentPage = pageNo,
-                TotalPages = totalPages
+                TotalPages = 1 // В этой реализации пагинация не учитывается, но можно добавить
             };
-
             return Task.FromResult(ResponseData<ListModel<Dish>>.Success(result));
         }
     }
