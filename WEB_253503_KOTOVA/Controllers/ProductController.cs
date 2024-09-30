@@ -28,13 +28,12 @@ namespace WEB_253503_KOTOVA.Controllers
             if (!productResponse.Successfull)
                 return NotFound(productResponse.ErrorMessage);
 
-            // Ищем текущую категорию по её нормализованному имени
-            // var currentCategory = categoriesResponse.Data.FirstOrDefault(c => c.NormalizedName == category);
 
-            // В ViewData["currentCategory"] передаем нормальное имя категории или "Все"
-            //ViewData["currentCategory"] = currentCategory != null ? currentCategory.Name : "Все";
+            var currentCategory = categoriesResponse.Data.FirstOrDefault(c => c.NormalizedName == category);
+
+            ViewData["currentCategoryName"] = currentCategory != null ? currentCategory.Name : "Все";
             ViewData["currentCategory"] = category != null ? category: "Все";
-            // Сохраняем список категорий в ViewBag для отображения в представлении
+         
             ViewBag.Categories = categoriesResponse.Data;
 
             return View(productResponse.Data);
