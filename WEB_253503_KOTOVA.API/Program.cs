@@ -1,14 +1,20 @@
 using Microsoft.EntityFrameworkCore;
 using WEB_253503_KOTOVA.API.Data;
+using WEB_253503_KOTOVA.API.Services.CategoryServices;
+using WEB_253503_KOTOVA.API.Services.ProductServices;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
 builder.Services.AddControllers();
+builder.Services.AddScoped<ICategoryService, CategoryService>();
+builder.Services.AddScoped<IProductService, ProductService>();
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
 
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("Default")));

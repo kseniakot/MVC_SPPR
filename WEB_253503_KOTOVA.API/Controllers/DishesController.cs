@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Mvc;
+using WEB_253503_KOTOVA.API.Services.ProductServices;
 using WEB_253503_KOTOVA.Domain.Entities;
+using WEB_253503_KOTOVA.Domain.Models;
 
 namespace WEB_253503_KOTOVA.API.Controllers
 {
@@ -13,95 +9,68 @@ namespace WEB_253503_KOTOVA.API.Controllers
     [ApiController]
     public class DishesController : ControllerBase
     {
-        private readonly AppDbContext _context;
+        private readonly IProductService _productService;
 
-        public DishesController(AppDbContext context)
+        public DishesController(IProductService productService)
         {
-            _context = context;
+            _productService = productService;
         }
 
         // GET: api/Dishes
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Dish>>> GetDishes()
+        public async Task<ActionResult<ResponseData<ListModel<Dish>>>> GetDishes(string? category, int pageNo = 1, int pageSize = 3)
         {
-            return await _context.Dishes.ToListAsync();
+            var result = await _productService.GetProductListAsync(category, pageNo, pageSize);
+            if (!result.Successfull)
+            {
+                return BadRequest(result.ErrorMessage);
+            }
+            return Ok(result.Data);
         }
 
         // GET: api/Dishes/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Dish>> GetDish(int id)
+        public async Task<ActionResult<ResponseData<Dish>>> GetDish(int id)
         {
-            var dish = await _context.Dishes.FindAsync(id);
-
-            if (dish == null)
+            var result = await _productService.GetProductByIdAsync(id);
+            if (!result.Successfull)
             {
-                return NotFound();
+                return NotFound(result.ErrorMessage);
             }
-
-            return dish;
+            return Ok(result.Data);
         }
 
         // PUT: api/Dishes/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
         public async Task<IActionResult> PutDish(int id, Dish dish)
         {
             if (id != dish.Id)
             {
-                return BadRequest();
+                return BadRequest("Id mismatch");
             }
 
-            _context.Entry(dish).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!DishExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
+            await _productService.UpdateProductAsync(id, dish);
             return NoContent();
         }
 
         // POST: api/Dishes
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Dish>> PostDish(Dish dish)
+        public async Task<ActionResult<ResponseData<Dish>>> PostDish(Dish dish)
         {
-            _context.Dishes.Add(dish);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetDish", new { id = dish.Id }, dish);
+            var result = await _productService.CreateProductAsync(dish);
+            if (!result.Successfull)
+            {
+                return BadRequest(result.ErrorMessage);
+            }
+            return CreatedAtAction(nameof(GetDish), new { id = dish.Id }, result.Data);
         }
 
         // DELETE: api/Dishes/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteDish(int id)
         {
-            var dish = await _context.Dishes.FindAsync(id);
-            if (dish == null)
-            {
-                return NotFound();
-            }
-
-            _context.Dishes.Remove(dish);
-            await _context.SaveChangesAsync();
-
+            await _productService.DeleteProductAsync(id);
             return NoContent();
-        }
-
-        private bool DishExists(int id)
-        {
-            return _context.Dishes.Any(e => e.Id == id);
         }
     }
 }
