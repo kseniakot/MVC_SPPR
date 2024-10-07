@@ -18,14 +18,12 @@ namespace WEB_253503_KOTOVA.API.Controllers
 
         // GET: api/Categories
         [HttpGet]
-        public async Task<ActionResult<ResponseData<List<Category>>>> GetCategories()
+        public async Task<ActionResult<ResponseData<List<Category>>>> GetCategories(
+        string? category,
+        int pageNo = 1,
+        int pageSize = 3)
         {
-            var result = await _categoryService.GetCategoryListAsync();
-            if (!result.Successfull)
-            {
-                return BadRequest(result.ErrorMessage);
-            }
-            return Ok(result.Data);
+            return Ok(await _categoryService.GetCategoryListAsync());
         }
 
         // GET: api/Categories/5

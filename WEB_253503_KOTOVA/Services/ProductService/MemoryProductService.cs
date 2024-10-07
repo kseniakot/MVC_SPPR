@@ -197,7 +197,7 @@ namespace WEB_253503_KOTOVA.UI.Services.ProductService
         /// <summary>
         /// Получение списка продуктов с фильтрацией по категории и разбиением на страницы
         /// </summary>
-        public Task<ResponseData<ListModel<Dish>>> GetProductListAsync(string? categoryNormalizedName, int pageNo = 1)
+        public Task<ResponseData<ListModel<Dish>>> GetProductListAsync(string? categoryNormalizedName, int pageNo = 1, int pageSize = 3)
         {
             // Проверяем, если categoryNormalizedName == null или пустая строка, то возвращаем все блюда 
             var filteredDishes = _dishes

@@ -16,20 +16,19 @@ namespace WEB_253503_KOTOVA.API.Controllers
             _productService = productService;
         }
 
-        // GET: api/Dishes
-        [HttpGet]
-        public async Task<ActionResult<ResponseData<ListModel<Dish>>>> GetDishes(string? category, int pageNo = 1, int pageSize = 3)
+        // GET: api/Dishes/{category}?pageNo=1&pageSize=3
+        [HttpGet("{category?}")]
+        public async Task<ActionResult<ResponseData<List<Dish>>>> GetDishes(
+            string? category,
+            int pageNo = 1,
+            int pageSize = 3)
         {
             var result = await _productService.GetProductListAsync(category, pageNo, pageSize);
-            if (!result.Successfull)
-            {
-                return BadRequest(result.ErrorMessage);
-            }
-            return Ok(result.Data);
+            return Ok(result);
         }
 
         // GET: api/Dishes/5
-        [HttpGet("{id}")]
+        [HttpGet("{id:int}")]
         public async Task<ActionResult<ResponseData<Dish>>> GetDish(int id)
         {
             var result = await _productService.GetProductByIdAsync(id);
@@ -73,4 +72,5 @@ namespace WEB_253503_KOTOVA.API.Controllers
             return NoContent();
         }
     }
+
 }
