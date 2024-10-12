@@ -20,13 +20,18 @@ namespace WEB_253503_KOTOVA.UI.Areas.Admin.Pages
         }
 
         public IList<Dish> Dish { get; set; } = new List<Dish>();
+        public int CurrentPage { get; set; }
+        public int TotalPages { get; set; }
 
-        public async Task OnGetAsync()
+        public async Task OnGetAsync(int? pageNo)
         {
-            var response = await _productService.GetProductListAsync(null, 1);
+            CurrentPage = pageNo ?? 1;
+
+            var response = await _productService.GetProductListAsync(null, CurrentPage);
             if (response.Successfull)
             {
                 Dish = response.Data.Items;
+                TotalPages = response.Data.TotalPages;
             }
             else
             {
@@ -34,4 +39,5 @@ namespace WEB_253503_KOTOVA.UI.Areas.Admin.Pages
             }
         }
     }
+
 }

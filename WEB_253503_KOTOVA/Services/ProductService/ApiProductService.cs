@@ -92,16 +92,16 @@ namespace WEB_253503_KOTOVA.UI.Services.ProductService
 
         public async Task<ResponseData<Dish>> GetProductByIdAsync(int id)
         {
-            // Construct the API URL
+            
             var urlString = $"{_httpClient.BaseAddress.AbsoluteUri}dishes/{id}";
 
             var response = await _httpClient.GetAsync(urlString);
             if (response.IsSuccessStatusCode)
             {
-                var dish = await response.Content.ReadFromJsonAsync<Dish>();  // Deserialize as a plain Dish object
+                var dish = await response.Content.ReadFromJsonAsync<Dish>();  
                 if (dish != null)
                 {
-                    return ResponseData<Dish>.Success(dish); // Wrap it in a ResponseData<Dish>
+                    return ResponseData<Dish>.Success(dish); 
                 }
             }
 
