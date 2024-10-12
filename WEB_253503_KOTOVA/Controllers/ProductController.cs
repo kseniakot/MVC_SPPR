@@ -5,6 +5,7 @@ using WEB_253503_KOTOVA.UI.Services.ProductService;
 
 namespace WEB_253503_KOTOVA.Controllers
 {
+    [Route("menu/{category?}/{pageNo?}")]
     public class ProductController : Controller
     {
         private readonly IProductService _productService;
