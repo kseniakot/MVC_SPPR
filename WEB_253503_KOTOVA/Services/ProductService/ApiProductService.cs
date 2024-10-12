@@ -1,7 +1,7 @@
 ﻿
 using System.Text;
 using System.Text.Json;
-
+using System.Text.Json.Serialization;
 using WEB_253503_KOTOVA.Domain.Entities;
 using WEB_253503_KOTOVA.Domain.Models;
 
@@ -16,6 +16,14 @@ namespace WEB_253503_KOTOVA.UI.Services.ProductService
         public ApiProductService(HttpClient httpClient, IConfiguration configuration, ILogger<ApiProductService> logger)
         {
             _httpClient = httpClient;
+
+            // Установка BaseAddress для HttpClient из конфигурации
+            var apiUri = configuration["UriData:ApiUri"];
+            if (!string.IsNullOrEmpty(apiUri))
+            {
+                _httpClient.BaseAddress = new Uri(apiUri); // Устанавливаем базовый URL из конфигурации
+            }
+
             _serializerOptions = new JsonSerializerOptions
             {
                 PropertyNamingPolicy = JsonNamingPolicy.CamelCase
@@ -82,6 +90,23 @@ namespace WEB_253503_KOTOVA.UI.Services.ProductService
             return ResponseData<Dish>.Error($"Объект не добавлен. Error: {response.StatusCode}");
         }
 
-        // Добавь остальные методы для редактирования, удаления и получения блюда по ID, аналогично
+        public async Task<ResponseData<Dish>> GetProductByIdAsync(int id)
+        {
+            // Construct the API URL
+            var urlString = $"{_httpClient.BaseAddress.AbsoluteUri}dishes/{id}";
+
+            var response = await _httpClient.GetAsync(urlString);
+            if (response.IsSuccessStatusCode)
+            {
+                var dish = await response.Content.ReadFromJsonAsync<Dish>();  // Deserialize as a plain Dish object
+                if (dish != null)
+                {
+                    return ResponseData<Dish>.Success(dish); // Wrap it in a ResponseData<Dish>
+                }
+            }
+
+            return ResponseData<Dish>.Error("Dish not found");
+        }
+
     }
 }

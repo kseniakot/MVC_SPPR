@@ -6,7 +6,7 @@ namespace WEB_253503_KOTOVA.UI.Services.ProductService
 {
     public class MemoryProductService : IProductService
     {
-      
+
 
         private int _itemsPerPage;
         private List<Dish> _dishes;
@@ -229,7 +229,17 @@ namespace WEB_253503_KOTOVA.UI.Services.ProductService
             return Task.FromResult(ResponseData<ListModel<Dish>>.Success(result));
         }
 
+        public Task<ResponseData<Dish>> GetProductByIdAsync(int id)
+        {
+            var dish = _dishes.FirstOrDefault(d => d.Id == id);
 
+            if (dish == null)
+            {
+                return Task.FromResult(ResponseData<Dish>.Error("Блюдо не найдено."));
+            }
+
+            return Task.FromResult(ResponseData<Dish>.Success(dish));
+        }
 
     }
 

@@ -42,7 +42,7 @@ namespace WEB_253503_KOTOVA.UI.Services.ProductService
 
         //public Task<ResponseData<Dish>> CreateProductAsync(Dish product, IFormFile?
         //formFile);
-
+        public Task<ResponseData<Dish>> GetProductByIdAsync(int id);
 
     }
 }

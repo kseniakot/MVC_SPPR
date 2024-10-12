@@ -38,6 +38,10 @@ builder.Services.AddHttpClient<ICategoryService, ApiCategoryService>((servicePro
     client.BaseAddress = new Uri(uriData.ApiUri);
 });
 
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+
 
 
 var app = builder.Build();
@@ -58,6 +62,7 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+
 
 app.UseAuthorization();
 
