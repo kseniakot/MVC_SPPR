@@ -3,5 +3,7 @@
     public class UriData
     {
         public string ApiUri { get; set; } = string.Empty;
+        //public string ApiUriFiles { get; set; }
+
     }
 }
