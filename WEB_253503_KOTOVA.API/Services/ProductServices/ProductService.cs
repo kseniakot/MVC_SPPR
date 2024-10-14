@@ -2,6 +2,7 @@
 using WEB_253503_KOTOVA.Domain.Models;
 using Microsoft.EntityFrameworkCore;
 using WEB_253503_KOTOVA.Domain.Entities;
+using System.Drawing.Printing;
 
 
 namespace WEB_253503_KOTOVA.API.Services.ProductServices
@@ -106,27 +107,36 @@ namespace WEB_253503_KOTOVA.API.Services.ProductServices
 
         public async Task<ResponseData<Dish>> CreateProductAsync(Dish product)
             {
+            _context.Categories.Attach(product.Category);
+            Console.WriteLine($"Dish Id: {product.Id}");
+            Console.WriteLine($"Dish Name: {product.Name}");
+            Console.WriteLine($"Dish Description: {product.Description}");
+            Console.WriteLine($"Dish Calories: {product.Calories}");
+            Console.WriteLine($"Dish CategoryId: {product.CategoryId}");
+            Console.WriteLine($"Dish Category: {product.Category?.Name}"); // Use null-conditional operator in case Category is null
+            Console.WriteLine($"Dish Price: {product.Price}");
+            Console.WriteLine($"Dish Image: {product.Image}");
                 _context.Dishes.Add(product);
                 await _context.SaveChangesAsync();
                 return ResponseData<Dish>.Success(product);
             }
 
-            public async Task<ResponseData<string>> SaveImageAsync(int id, IFormFile formFile)
+        public async Task<ResponseData<string>> SaveImageAsync(int id, IFormFile formFile)
+        {
+            // Здесь можно добавить логику для сохранения изображений
+            var dish = await _context.Dishes.FindAsync(id);
+            if (dish == null)
             {
-                // Здесь можно добавить логику для сохранения изображений
-                var dish = await _context.Dishes.FindAsync(id);
-                if (dish == null)
-                {
-                    return ResponseData<string>.Error("Product not found");
-                }
-
-                // Логика для сохранения изображения и получения его URL
-                var imageUrl = $"/Images/{formFile.FileName}";
-                dish.Image = imageUrl;
-                await _context.SaveChangesAsync();
-
-                return ResponseData<string>.Success(imageUrl);
+                return ResponseData<string>.Error("Product not found");
             }
+
+            // Логика для сохранения изображения и получения его URL
+            var imageUrl = $"/Images/{formFile.FileName}";
+            dish.Image = imageUrl;
+            await _context.SaveChangesAsync();
+
+            return ResponseData<string>.Success(imageUrl);
+        }
         }
     
 
