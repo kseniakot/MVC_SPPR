@@ -25,10 +25,14 @@ namespace WEB_253503_KOTOVA.API.Services.ProductServices
             if (pageSize > _maxPageSize)
                 pageSize = _maxPageSize;
 
-            var query = _context.Dishes.AsQueryable();
+            // Включаем загрузку связанных данных с помощью Include
+            var query = _context.Dishes
+                                .Include(d => d.Category) // Загружаем связанную категорию
+                                .AsQueryable();
+
             var dataList = new ListModel<Dish>();
 
-            // Проверка категории, корректируем кавычки
+            // Фильтруем по категории, если указано
             if (!string.IsNullOrEmpty(categoryNormalizedName) && categoryNormalizedName != "Все")
             {
                 query = query.Where(d => d.Category.NormalizedName.Equals(categoryNormalizedName));
