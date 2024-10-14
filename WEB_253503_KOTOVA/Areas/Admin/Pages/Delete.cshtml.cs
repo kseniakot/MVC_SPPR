@@ -12,36 +12,37 @@ namespace WEB_253503_KOTOVA.UI.Areas.Admin.Pages
 {
     public class DeleteModel : PageModel
     {
-        private readonly IProductService _productService;
+        private readonly IProductService _context;
 
-        public DeleteModel(IProductService productService)
+        public DeleteModel(IProductService context)
         {
-            _productService = productService;
+            _context = context;
         }
 
         [BindProperty]
         public Dish Dish { get; set; } = default!;
 
-       /* public async Task<IActionResult> OnGetAsync(int? id)
+
+        // Отображение блюда, которое будет удалено
+        public async Task<IActionResult> OnGetAsync(int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var dish = await _productService.Dishes.FirstOrDefaultAsync(m => m.Id == id);
+            var response = await _context.GetProductByIdAsync(id.Value);
 
-            if (dish == null)
+            if (!response.Successfull || response.Data == null)
             {
                 return NotFound();
             }
-            else
-            {
-                Dish = dish;
-            }
+
+            Dish = response.Data;
             return Page();
         }
 
+        // Удаление блюда при подтверждении
         public async Task<IActionResult> OnPostAsync(int? id)
         {
             if (id == null)
@@ -49,15 +50,16 @@ namespace WEB_253503_KOTOVA.UI.Areas.Admin.Pages
                 return NotFound();
             }
 
-            var dish = await _context.Dishes.FindAsync(id);
-            if (dish != null)
+            var response = await _context.DeleteProductAsync(id.Value);
+            if (!response.Successfull)
             {
-                Dish = dish;
-                _context.Dishes.Remove(Dish);
-                await _context.SaveChangesAsync();
+                ModelState.AddModelError("", "Не удалось удалить блюдо: " + response.ErrorMessage);
+                return Page();
             }
 
-            return RedirectToPage("./Index");
-        }*/
+            return RedirectToPage("./Index"); // Перенаправление на список после удаления
+        }
+
+
     }
 }

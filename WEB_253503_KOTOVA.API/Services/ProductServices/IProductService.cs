@@ -34,7 +34,7 @@ namespace WEB_253503_KOTOVA.API.Services.ProductServices
         /// </summary>
         /// <param name="id">Id удаляемого объекта</param>
         /// <returns></returns>
-        public Task DeleteProductAsync(int id);
+        Task<ResponseData<object>> DeleteProductAsync(int id);
 
         /// <summary>
         /// Создание объекта

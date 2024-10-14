@@ -90,17 +90,21 @@ namespace WEB_253503_KOTOVA.API.Services.ProductServices
                 await _context.SaveChangesAsync();
             }
 
-            public async Task DeleteProductAsync(int id)
+        public async Task<ResponseData<object>> DeleteProductAsync(int id)
+        {
+            var product = await _context.Dishes.FindAsync(id);
+            if (product == null)
             {
-                var dish = await _context.Dishes.FindAsync(id);
-                if (dish != null)
-                {
-                    _context.Dishes.Remove(dish);
-                    await _context.SaveChangesAsync();
-                }
+                return ResponseData<object>.Error("Product not found");
             }
 
-            public async Task<ResponseData<Dish>> CreateProductAsync(Dish product)
+            _context.Dishes.Remove(product);
+            await _context.SaveChangesAsync();
+
+            return ResponseData<object>.Success(null);  
+        }
+
+        public async Task<ResponseData<Dish>> CreateProductAsync(Dish product)
             {
                 _context.Dishes.Add(product);
                 await _context.SaveChangesAsync();

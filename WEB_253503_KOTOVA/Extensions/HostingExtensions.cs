@@ -12,7 +12,7 @@ namespace WEB_253503_KOTOVA.UI.Extensions
         this WebApplicationBuilder builder)
         {
             builder.Services.AddScoped<ICategoryService, MemoryCategoryService>();
-            builder.Services.AddScoped<IProductService, MemoryProductService>();
+          //  builder.Services.AddScoped<IProductService, MemoryProductService>();
             var apiUri = builder.Configuration.GetSection("UriData").GetValue<string>("ApiUri");
             builder.Services.AddHttpClient<IFileService, ApiFileService>(opt => opt.BaseAddress = new Uri($"{apiUri}Files"));
         }
