@@ -57,16 +57,7 @@ namespace WEB_253503_KOTOVA.UI.Areas.Admin.Pages
                 await LoadCategoriesAsync();
                 return Page();
             }
-            Console.WriteLine($"Dish Id: {Dish.Id}");
-            Console.WriteLine($"Dish Name: {Dish.Name}");
-            Console.WriteLine($"Dish Description: {Dish.Description}");
-            Console.WriteLine($"Dish Calories: {Dish.Calories}");
-            Console.WriteLine($"Dish CategoryId: {Dish.CategoryId}");
-            Console.WriteLine($"Dish Category: {Dish.Category?.Name}"); // Use null-conditional operator in case Category is null
-            Console.WriteLine($"Dish Price: {Dish.Price}");
-            Console.WriteLine($"Dish Image: {Dish.Image}");
-            Console.WriteLine($"Dish MimeType: {Dish.MimeType}");
-
+            
             // Логика создания блюда
             await _productService.CreateProductAsync(Dish, Upload);
             return RedirectToPage("./Index");

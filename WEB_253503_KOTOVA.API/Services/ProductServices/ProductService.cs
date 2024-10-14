@@ -108,15 +108,8 @@ namespace WEB_253503_KOTOVA.API.Services.ProductServices
         public async Task<ResponseData<Dish>> CreateProductAsync(Dish product)
             {
             _context.Categories.Attach(product.Category);
-            Console.WriteLine($"Dish Id: {product.Id}");
-            Console.WriteLine($"Dish Name: {product.Name}");
-            Console.WriteLine($"Dish Description: {product.Description}");
-            Console.WriteLine($"Dish Calories: {product.Calories}");
-            Console.WriteLine($"Dish CategoryId: {product.CategoryId}");
-            Console.WriteLine($"Dish Category: {product.Category?.Name}"); // Use null-conditional operator in case Category is null
-            Console.WriteLine($"Dish Price: {product.Price}");
-            Console.WriteLine($"Dish Image: {product.Image}");
-                _context.Dishes.Add(product);
+            
+            _context.Dishes.Add(product);
                 await _context.SaveChangesAsync();
                 return ResponseData<Dish>.Success(product);
             }
