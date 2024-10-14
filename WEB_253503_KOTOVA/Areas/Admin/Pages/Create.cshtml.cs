@@ -57,9 +57,21 @@ namespace WEB_253503_KOTOVA.UI.Areas.Admin.Pages
                 await LoadCategoriesAsync();
                 return Page();
             }
-            
-            // Логика создания блюда
-            await _productService.CreateProductAsync(Dish, Upload);
+
+            if (Upload != null)
+            {
+                var allowedTypes = new[] { "image/jpeg", "image/png", "image/webp", "image/jpg" };
+                if (!allowedTypes.Contains(Upload.ContentType))
+                {
+                    Console.WriteLine(Upload.ContentType);
+                    ModelState.AddModelError("Upload", "Неподдерживаемый тип файла. Пожалуйста, загрузите изображение.");
+                    await LoadCategoriesAsync(); // Загружаем категории при ошибках
+                    return Page();
+                }
+            }
+
+                // Логика создания блюда
+                await _productService.CreateProductAsync(Dish, Upload);
             return RedirectToPage("./Index");
         }
 
