@@ -6,6 +6,7 @@ using System.Text.Json.Serialization;
 using WEB_253503_KOTOVA.API.Services.FileServices;
 using WEB_253503_KOTOVA.Domain.Entities;
 using WEB_253503_KOTOVA.Domain.Models;
+using WEB_253503_KOTOVA.UI.Services.Authentification;
 
 namespace WEB_253503_KOTOVA.UI.Services.ProductService
 {
@@ -15,9 +16,10 @@ namespace WEB_253503_KOTOVA.UI.Services.ProductService
         private readonly ILogger<ApiProductService> _logger;
         private readonly JsonSerializerOptions _serializerOptions;
         private readonly IFileService _fileService;
+        private readonly ITokenAccessor _tokenAccessor;
 
 
-        public ApiProductService(HttpClient httpClient, IConfiguration configuration, ILogger<ApiProductService> logger, IFileService fileService)
+        public ApiProductService(HttpClient httpClient, IConfiguration configuration, ILogger<ApiProductService> logger, IFileService fileService, ITokenAccessor tokenAccessor)
         {
             _httpClient = httpClient;
 
@@ -34,6 +36,7 @@ namespace WEB_253503_KOTOVA.UI.Services.ProductService
             };
             _logger = logger;
             _fileService = fileService;
+            _tokenAccessor = tokenAccessor;
         }
 
         public async Task<ResponseData<ListModel<Dish>>> GetProductListAsync(string? categoryNormalizedName, int pageNo = 1, int pageSize = 3)
@@ -59,6 +62,7 @@ namespace WEB_253503_KOTOVA.UI.Services.ProductService
                 urlString.Append($"&pageSize={pageSize}");
             }
 
+            await _tokenAccessor.SetAuthorizationHeaderAsync(_httpClient);
             // Отправка запроса к API
             var response = await _httpClient.GetAsync(urlString.ToString());
 
@@ -83,6 +87,7 @@ namespace WEB_253503_KOTOVA.UI.Services.ProductService
         {
             var uri = new Uri(_httpClient.BaseAddress.AbsoluteUri + "dishes");
 
+            await _tokenAccessor.SetAuthorizationHeaderAsync(_httpClient);
             var response = await _httpClient.PostAsJsonAsync(uri, product, _serializerOptions);
 
             if (response.IsSuccessStatusCode)
@@ -100,6 +105,7 @@ namespace WEB_253503_KOTOVA.UI.Services.ProductService
             
             var urlString = $"{_httpClient.BaseAddress.AbsoluteUri}dishes/{id}";
 
+            await _tokenAccessor.SetAuthorizationHeaderAsync(_httpClient);
             var response = await _httpClient.GetAsync(urlString);
             if (response.IsSuccessStatusCode)
             {
@@ -128,6 +134,8 @@ namespace WEB_253503_KOTOVA.UI.Services.ProductService
             }
 
             var uri = new Uri(_httpClient.BaseAddress.AbsoluteUri + "Dishes");
+
+            await _tokenAccessor.SetAuthorizationHeaderAsync(_httpClient);
             var response = await _httpClient.PostAsJsonAsync(uri, product, _serializerOptions);
 
             if (response.IsSuccessStatusCode)
@@ -157,6 +165,8 @@ namespace WEB_253503_KOTOVA.UI.Services.ProductService
 
             // Отправляем обновленные данные блюда на сервер
             var uri = new Uri(_httpClient.BaseAddress.AbsoluteUri + $"Dishes/{id}");
+
+            await _tokenAccessor.SetAuthorizationHeaderAsync(_httpClient);
             var response = await _httpClient.PutAsJsonAsync(uri, product);
 
             if (response.IsSuccessStatusCode)
@@ -176,6 +186,8 @@ namespace WEB_253503_KOTOVA.UI.Services.ProductService
         public async Task<ResponseData<object>> DeleteProductAsync(int id)
         {
             var uri = new Uri(_httpClient.BaseAddress.AbsoluteUri + $"Dishes/{id}");
+
+            await _tokenAccessor.SetAuthorizationHeaderAsync(_httpClient);
             var response = await _httpClient.DeleteAsync(uri);
 
             if (response.IsSuccessStatusCode)

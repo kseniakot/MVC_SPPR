@@ -36,6 +36,9 @@ namespace WEB_253503_KOTOVA.UI.Services.Authentification
             new KeyValuePair<string, string>("grant_type", "client_credentials"),
                 new KeyValuePair<string, string>("client_secret", _keycloakData.ClientSecret)
 ]);
+            Console.WriteLine("CONTENT");
+            string contentString = await content.ReadAsStringAsync();
+            Console.WriteLine(contentString);
             // send request
             var response = await _httpClient.PostAsync(requestUri, content);
             if (!response.IsSuccessStatusCode)
@@ -44,6 +47,7 @@ namespace WEB_253503_KOTOVA.UI.Services.Authentification
             }
             // extract access token from response
             var jsonString = await response.Content.ReadAsStringAsync();
+            Console.WriteLine(JsonObject.Parse(jsonString)["access_token"].GetValue<string>());
             return JsonObject.Parse(jsonString)["access_token"].GetValue<string>();
         }
         public async Task SetAuthorizationHeaderAsync(HttpClient httpClient)
