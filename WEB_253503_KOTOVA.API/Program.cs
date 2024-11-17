@@ -1,11 +1,37 @@
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using System.Configuration;
 using WEB_253503_KOTOVA.API.Data;
+using WEB_253503_KOTOVA.API.Models;
 using WEB_253503_KOTOVA.API.Services.CategoryServices;
 using WEB_253503_KOTOVA.API.Services.ProductServices;
 
 var builder = WebApplication.CreateBuilder(args);
+var authServer = builder.Configuration
+.GetSection("AuthServer")
+.Get<AuthServerData>();
+// Добавить сервис аутентификации
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+.AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, o =>
+{
+    // Адрес метаданных конфигурации OpenID
+    o.MetadataAddress = $"{authServer.Host}/realms/{authServer.Realm}/.well-known/openid-configuration";
+    // Authority сервера аутентификации
+    o.Authority = $"{authServer.Host}/realms/{authServer.Realm}";
+    // Audience для токена JWT
+    o.Audience = "account";
+    // Запретить HTTPS для использования локальной версии Keycloak
+    // В рабочем проекте должно быть true
+    o.RequireHttpsMetadata = false;
+});
+
 
 // Add services to the container.
+
+builder.Services.AddAuthorization(opt =>
+{
+    opt.AddPolicy("admin", p => p.RequireRole("POWER-USER"));
+});
 
 builder.Services.AddControllers();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
@@ -32,6 +58,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 app.UseStaticFiles();
 
