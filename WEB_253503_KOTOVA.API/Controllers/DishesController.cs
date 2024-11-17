@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using WEB_253503_KOTOVA.API.Services.ProductServices;
 using WEB_253503_KOTOVA.Domain.Entities;
 using WEB_253503_KOTOVA.Domain.Models;
@@ -41,6 +42,7 @@ namespace WEB_253503_KOTOVA.API.Controllers
 
         // PUT: api/Dishes/5
         [HttpPut("{id}")]
+        [Authorize(Policy = "admin")]
         public async Task<IActionResult> PutDish(int id, Dish dish)
         {
             if (id != dish.Id)
@@ -54,6 +56,7 @@ namespace WEB_253503_KOTOVA.API.Controllers
 
         // POST: api/Dishes
         [HttpPost]
+        [Authorize(Policy = "admin")]
         public async Task<ActionResult<ResponseData<Dish>>> PostDish(Dish dish)
         {
             var result = await _productService.CreateProductAsync(dish);
@@ -66,6 +69,7 @@ namespace WEB_253503_KOTOVA.API.Controllers
 
         // DELETE: api/Dishes/5
         [HttpDelete("{id}")]
+        [Authorize(Policy = "admin")]
         public async Task<IActionResult> DeleteDish(int id)
         {
             await _productService.DeleteProductAsync(id);
