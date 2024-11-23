@@ -13,10 +13,13 @@ using WEB_253503_KOTOVA.UI.Extensions;
 using WEB_253503_KOTOVA.UI.HelperClasses;
 using WEB_253503_KOTOVA.UI.Services.CategoryService;
 using WEB_253503_KOTOVA.UI.Services.ProductService;
+using WEB_253503_KOTOVA.Domain.Models;
+using WEB_253503_KOTOVA.UI.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 var keycloakData =
 builder.Configuration.GetSection("Keycloak").Get<KeycloakData>();
+
 builder.Services
 .AddAuthentication(options =>
 {
@@ -42,8 +45,19 @@ options.MetadataAddress = $"{keycloakData.Host}/realms/{keycloakData.Realm}/.wel
 builder.Services.AddHttpContextAccessor();
 // Add services to the container.
 builder.Services.AddControllersWithViews();
-builder.RegisterCustomServices();
+
+
+builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+builder.Services.AddScoped<Cart>(sp => SessionCart.GetCart(sp));
+
+builder.Services.AddRazorPages();
 builder.Services.AddHttpContextAccessor();
+
+builder.Services.AddDistributedMemoryCache();
+builder.Services.AddSession();
+
+builder.RegisterCustomServices();
+
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
     ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
@@ -90,6 +104,8 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+
+app.UseSession();
 app.UseAuthentication(); 
 app.UseAuthorization();
 

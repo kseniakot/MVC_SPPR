@@ -21,6 +21,7 @@ namespace WEB_253503_KOTOVA.UI.Extensions
             builder.Services.Configure<KeycloakData>(builder.Configuration.GetSection("Keycloak"));
             builder.Services.AddHttpClient<ITokenAccessor, KeycloakTokenAccessor>();
             builder.Services.AddScoped<IAuthService, KeycloakAuthService>();
+           
         }
     }
 }

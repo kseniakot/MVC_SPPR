@@ -6,7 +6,7 @@ using WEB_253503_KOTOVA.UI.Extensions;
 
 namespace WEB_253503_KOTOVA.Controllers
 {
-    [Route("menu/{category?}/{pageNo?}")]
+    [Route("Catalog")]
     public class ProductController : Controller
     {
         private readonly IProductService _productService;
@@ -17,6 +17,9 @@ namespace WEB_253503_KOTOVA.Controllers
             _productService = productService;
             _categoryService = categoryService;
         }
+
+        [Route("")] // Маршрут для localhost:хххх/Catalog
+        [Route("{category?}")] // Маршрут для localhost:хххх/Catalog/имя_категории
 
         public async Task<IActionResult> Index(string? category, int pageNo = 1)
         {
