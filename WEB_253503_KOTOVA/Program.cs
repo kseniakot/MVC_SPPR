@@ -52,7 +52,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
-    .AddEntityFrameworkStores<ApplicationDbContext>();
+    .AddEntityFrameworkStores<ApplicationDbContext>(); //////
 
 builder.Services.Configure<UriData>(builder.Configuration.GetSection("UriData"));
 
@@ -90,7 +90,9 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+app.UseAuthentication(); 
 app.UseAuthorization();
+
 
 app.MapControllerRoute(
     name: "default",

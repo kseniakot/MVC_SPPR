@@ -38,19 +38,16 @@ namespace WEB_253503_KOTOVA.UI.Controllers
             return View(user);
         }
 
-       /* public IActionResult Login()
+        public async Task Login()
         {
-            return View(new LoginUserViewModel());
-        }*/
-
-        public async Task LoginHandler()
-        {
+            //  return View(new LoginUserViewModel());
+           
             await HttpContext.ChallengeAsync(OpenIdConnectDefaults.AuthenticationScheme,
-                new AuthenticationProperties
-                {
-                    RedirectUri = Url.Action("Index", "Home")
-                }
-            );
+            new AuthenticationProperties
+            {
+                RedirectUri = Url.Action("Index", "Home")
+            }
+           );
         }
 
         [HttpPost]

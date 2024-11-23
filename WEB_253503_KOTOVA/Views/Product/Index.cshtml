@@ -1,5 +1,57 @@
 ﻿@model WEB_253503_KOTOVA.Domain.Models.ListModel<WEB_253503_KOTOVA.Domain.Entities.Dish>
 
+
+
+@{
+    ViewBag.Title = "Index";
+    var request = ViewContext.HttpContext.Request;
+    var returnUrl = request.Path + request.QueryString.ToUriComponent();
+    var currentCategory = ViewData["currentCategory"]?.ToString() ?? "";
+}
+
+<!-- Выбор категории -->
+<div class="col-2">
+    <ul class="nav">
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">
+                @ViewData["currentCategoryName"]
+            </a>
+            <ul class="dropdown-menu">
+                <!-- Ссылка для категории "Все", передаем пустую строку -->
+                <li>
+                    <a class="dropdown-item" asp-controller="Product" asp-action="Index" asp-route-category="">Все</a>
+                </li>
+                @if (ViewBag.Categories != null)
+                {
+                    foreach (var item in ViewBag.Categories)
+                    {
+                        <li>
+                            <a class="dropdown-item" asp-controller="Product" asp-action="Index" asp-route-category="@item.NormalizedName">
+                                @item.Name
+                            </a>
+                        </li>
+                    }
+                }
+            </ul>
+        </li>
+    </ul>
+</div>
+
+
+<div id="partial_container">
+    @await Html.PartialAsync("Components/Dish/_DishListPartial", Model)
+</div>
+
+
+<pager current-page="@Model.CurrentPage" total-pages="@Model.TotalPages" category="@currentCategory"></pager>
+
+@section Scripts {
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="/js/site.js"></script>
+}
+
+
+    @*
 @{
     // Вычисляем предыдущую и следующую страницы
     int prev = Model.CurrentPage == 1
@@ -115,7 +167,7 @@
 </nav>
 
 
-
+*@
 
 
 

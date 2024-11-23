@@ -2,6 +2,7 @@
 using WEB_253503_KOTOVA.Domain.Entities;
 using WEB_253503_KOTOVA.UI.Services.CategoryService;
 using WEB_253503_KOTOVA.UI.Services.ProductService;
+using WEB_253503_KOTOVA.UI.Extensions;
 
 namespace WEB_253503_KOTOVA.Controllers
 {
@@ -36,6 +37,12 @@ namespace WEB_253503_KOTOVA.Controllers
             ViewData["currentCategory"] = category != null ? category: "Все";
          
             ViewBag.Categories = categoriesResponse.Data;
+
+            // Проверка на AJAX-запрос
+            if (Request.IsAjaxRequest())
+            {
+                return PartialView("~/Views/Shared/Components/Dish/_DishListPartial.cshtml", productResponse.Data);
+            }
 
             return View(productResponse.Data);
         }
