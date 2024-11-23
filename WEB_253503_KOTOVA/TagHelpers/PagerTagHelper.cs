@@ -87,10 +87,13 @@ namespace WEB_253503_KOTOVA.UI.TagHelpers
             { "pageNo", page }
         };
 
-            // Если категория указана, добавляем ее в параметры
             if (!string.IsNullOrEmpty(Category))
             {
                 values["category"] = Category;
+            }
+            else
+            {
+                values["category"] = "Все";
             }
 
             string? url = _linkGenerator.GetPathByAction(

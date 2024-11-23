@@ -6,7 +6,6 @@
     ViewBag.Title = "Index";
     var request = ViewContext.HttpContext.Request;
     var returnUrl = request.Path + request.QueryString.ToUriComponent();
-    var currentCategory = ViewData["currentCategory"]?.ToString() ?? "";
 }
 
 <!-- Выбор категории -->
@@ -17,7 +16,7 @@
                 @ViewData["currentCategoryName"]
             </a>
             <ul class="dropdown-menu">
-                <!-- Ссылка для категории "Все", передаем пустую строку -->
+               
                 <li>
                     <a class="dropdown-item" asp-controller="Product" asp-action="Index" asp-route-category="">Все</a>
                 </li>
@@ -42,8 +41,6 @@
     @await Html.PartialAsync("Components/Dish/_DishListPartial", Model)
 </div>
 
-
-<pager current-page="@Model.CurrentPage" total-pages="@Model.TotalPages" category="@currentCategory"></pager>
 
 @section Scripts {
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
