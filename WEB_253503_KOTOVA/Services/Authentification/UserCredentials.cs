@@ -2,7 +2,7 @@
 {
     public class UserCredentials
     {
-        public string Type { get; set; } = "password";
+        public string Type { get; set; } = "Password";
         public bool Temporary { get; set; } = false;
         public string Value { get; set; }
     }

@@ -22,6 +22,7 @@ namespace WEB_253503_KOTOVA.UI.Controllers
             {
                 if (user == null)
                 {
+            
                     return BadRequest();
                 }
 
@@ -32,6 +33,7 @@ namespace WEB_253503_KOTOVA.UI.Controllers
                 {
                     return Redirect(Url.Action("Index", "Home"));
                 }
+               
                 return BadRequest(result.ErrorMessage);
             }
 
