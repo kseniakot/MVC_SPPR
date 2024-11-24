@@ -36,9 +36,9 @@ namespace WEB_253503_KOTOVA.UI.Services.Authentification
             new KeyValuePair<string, string>("grant_type", "client_credentials"),
                 new KeyValuePair<string, string>("client_secret", _keycloakData.ClientSecret)
 ]);
-            Console.WriteLine("CONTENT");
+            
             string contentString = await content.ReadAsStringAsync();
-            Console.WriteLine(contentString);
+           
             // send request
             var response = await _httpClient.PostAsync(requestUri, content);
             if (!response.IsSuccessStatusCode)
