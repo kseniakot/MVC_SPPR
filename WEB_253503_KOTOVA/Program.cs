@@ -15,8 +15,21 @@ using WEB_253503_KOTOVA.UI.Services.CategoryService;
 using WEB_253503_KOTOVA.UI.Services.ProductService;
 using WEB_253503_KOTOVA.Domain.Models;
 using WEB_253503_KOTOVA.UI.Models;
+using Serilog;
+using Serilog.Events;
+using WEB_253503_KOTOVA.UI.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
+
+Log.Logger = new LoggerConfiguration()
+    .ReadFrom.Configuration(builder.Configuration)
+    .CreateLogger();
+builder.Logging.ClearProviders();
+builder.Logging.AddConsole();
+builder.Logging.AddSerilog();
+builder.Host.UseSerilog();
+Log.Logger.Information("[Started logging...]");
+
 var keycloakData =
 builder.Configuration.GetSection("Keycloak").Get<KeycloakData>();
 
@@ -88,6 +101,9 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 var app = builder.Build();
+
+app.UseMiddleware<LoggerMiddleware>();
+app.UseSerilogRequestLogging();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
