@@ -1,0 +1,60 @@
+﻿@using WEB_253503_KOTOVA.Domain.Entities
+@inject IDataService DataService
+
+<div>
+    @if (DataService.Categories == null || DataService.Categories.Count == 0)
+    {
+        <p>Категории не загружены или пусты</p>
+    }
+    else
+    {
+        <p>Загружено категорий: @DataService.Categories.Count</p>
+    }
+</div>
+
+<div class="dropdown">
+    <button class="btn btn-secondary dropdown-toggle" type="button" id="categoryDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+        @(SelectedCategory?.Name ?? "Выберите категорию")
+    </button>
+    <ul class="dropdown-menu" aria-labelledby="categoryDropdown">
+        @if (DataService.Categories != null)
+        {
+            @foreach (var category in DataService.Categories)
+            {
+                <li>
+                    <button class="dropdown-item" @onclick="() => SelectCategory(category)">
+                        @category.Name
+                    </button>
+                </li>
+            }
+        }
+    </ul>
+</div>
+
+@code {
+    private Category? SelectedCategory;
+
+    private async Task SelectCategory(Category category)
+    {
+        SelectedCategory = category;
+        DataService.SelectedCategory = category;
+
+   
+        await DataService.GetProductListAsync(1);
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (DataService.Categories == null || !DataService.Categories.Any())
+        {
+         
+            await DataService.GetCategoryListAsync();
+            DataService.DataLoaded += StateHasChanged; 
+        }
+    }
+
+    public void Dispose()
+    {
+        DataService.DataLoaded -= StateHasChanged; 
+    }
+}

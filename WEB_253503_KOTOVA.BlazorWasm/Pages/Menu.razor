@@ -1,0 +1,15 @@
+﻿@page "/menu"
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize]
+<h3>Меню дня</h3>
+<CategorySelector/>
+<DishList/>
+
+@code {
+[Inject] IDataService? DataService { get; set; }
+
+protected override async Task OnInitializedAsync()
+{
+    await DataService.GetProductListAsync();
+}
+}

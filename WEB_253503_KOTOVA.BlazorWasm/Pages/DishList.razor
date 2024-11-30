@@ -4,8 +4,9 @@
 @using WEB_253503_KOTOVA.Domain.Models
 @using Microsoft.AspNetCore.Components.WebAssembly.Authentication
 @inject IDataService DataService
+@implements IDisposable
 
-<h3>Блюда дня</h3>
+<h3>Menu</h3>
 
 <AuthorizeView>
     <Authorized>
@@ -46,5 +47,14 @@ else
 
 </AuthorizeView>
 @code {
-    protected override async Task OnInitializedAsync() => await DataService.GetProductListAsync();
+    protected override void OnInitialized()
+    {
+       
+        DataService.DataLoaded += StateHasChanged;
+    }
+  
+    public void Dispose()
+    {
+        DataService.DataLoaded -= StateHasChanged;
+    }
 }
