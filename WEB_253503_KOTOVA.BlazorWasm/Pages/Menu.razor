@@ -5,12 +5,11 @@
 <h3>Меню дня</h3>
 
 <CategorySelector />
-
-<!-- Передаем метод для обработки выбора блюда -->
 <DishList OnDishSelected="OnDishSelected" />
 <Pager />
+<DishDetail SelectedDish="SelectedDish" />
 
-<!-- Отображаем информацию о выбранном блюде -->
+
 @if (SelectedDish != null)
 {
     <DishDetails SelectedDish="SelectedDish" />
