@@ -1,18 +1,8 @@
 ﻿@using WEB_253503_KOTOVA.Domain.Entities
 @inject IDataService DataService
 
-<div>
-    @if (DataService.Categories == null || DataService.Categories.Count == 0)
-    {
-        <p>Категории не загружены или пусты</p>
-    }
-    else
-    {
-        <p>Загружено категорий: @DataService.Categories.Count</p>
-    }
-</div>
 
-<div class="dropdown">
+<div class="dropdown, mb-3">
     <button class="btn btn-secondary dropdown-toggle" type="button" id="categoryDropdown" data-bs-toggle="dropdown" aria-expanded="false">
         @(SelectedCategory?.Name ?? "Выберите категорию")
     </button>
