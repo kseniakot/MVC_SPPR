@@ -1,0 +1,79 @@
+﻿@page "/dishes"
+@using System.Text.Json
+@using WEB_253503_KOTOVA.Domain.Entities
+@using WEB_253503_KOTOVA.Domain.Models
+@inject HttpClient Http
+
+<h3>Блюда дня</h3>
+
+@if (IsLoading)
+{
+    <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Loading...</span>
+    </div>
+}
+else if (!string.IsNullOrEmpty(ErrorMessage))
+{
+    <div class="alert alert-danger" role="alert">
+        @ErrorMessage
+    </div>
+}
+else if (Dishes != null && Dishes.Any())
+{
+    <table class="table table-striped table-hover">
+        <thead class="table-dark">
+            <tr>
+                <th>Name</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var dish in Dishes)
+            {
+                <tr>
+                    <td>@dish.Name</td>
+                    <td>@dish.Description</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <div class="alert alert-info" role="alert">
+        No dishes available.
+    </div>
+}
+
+
+
+@code {
+    private List<Dish>? Dishes;
+    private bool IsLoading = true;
+    private string? ErrorMessage;
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            IsLoading = true;
+
+            var response = await Http.GetFromJsonAsync<ResponseData<List<Dish>>>("https://localhost:7002/api/dishes/all");
+            if (response?.Successfull == true && response.Data != null)
+            {
+                Dishes = response.Data;
+            }
+            else
+            {
+                ErrorMessage = response?.ErrorMessage ?? "No dishes found.";
+            }
+        }
+        catch (Exception ex)
+        {
+            ErrorMessage = $"Error loading dishes: {ex.Message}";
+        }
+        finally
+        {
+            IsLoading = false;
+        }
+    }
+}
