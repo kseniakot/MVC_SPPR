@@ -1,8 +1,8 @@
 ﻿setPagerListener();
 
 function setPagerListener() {
-    $('span.page-link').unbind();
-    $('span.page-link').click(function (e) {
+    //$('span.page-link').unbind();
+    $('.page-link').click(function (e) {
         e.preventDefault();
         var url = $(this).attr('href');  // Get the URL from the data attribute
         // Make the AJAX GET request

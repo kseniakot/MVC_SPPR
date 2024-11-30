@@ -50,6 +50,7 @@ namespace WEB_253503_KOTOVA.API.Services.ProductServices
         /// <param name="formFile">Файл изображения</param>
         /// <returns>Url к файлу изображения</returns>
         public Task<ResponseData<string>> SaveImageAsync(int id, IFormFile formFile);
+        public Task<ResponseData<List<Dish>>> GetAllProductsAsync();
     }
 
 }

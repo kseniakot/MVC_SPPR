@@ -130,7 +130,21 @@ namespace WEB_253503_KOTOVA.API.Services.ProductServices
 
             return ResponseData<string>.Success(imageUrl);
         }
+
+        public async Task<ResponseData<List<Dish>>> GetAllProductsAsync()
+        {
+            var dishes = await _context.Dishes
+                .Include(d => d.Category) // Подгрузить связанные категории
+                .OrderBy(d => d.Id) // Для упорядочивания
+                .ToListAsync();
+            if (dishes.Count == 0)
+            {
+                return ResponseData<List<Dish>>.Error("No dishes found");
+            }
+            return ResponseData<List<Dish>>.Success(dishes);
         }
-    
+
+    }
+
 
 }

@@ -25,6 +25,14 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     o.RequireHttpsMetadata = false;
 });
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowBlazorWasm",
+        policy => policy.WithOrigins("https://localhost:7091") 
+                        .AllowAnyHeader()
+                        .AllowAnyMethod());
+});
+
 
 // Add services to the container.
 
@@ -44,7 +52,7 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("Default")));
-
+builder.Services.AddControllers();
 
 
 var app = builder.Build();
@@ -55,6 +63,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseCors("AllowBlazorWasm");
 
 app.UseHttpsRedirection();
 

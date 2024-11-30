@@ -33,6 +33,8 @@ Log.Logger.Information("[Started logging...]");
 var keycloakData =
 builder.Configuration.GetSection("Keycloak").Get<KeycloakData>();
 
+
+
 builder.Services
 .AddAuthentication(options =>
 {
@@ -122,7 +124,7 @@ app.UseStaticFiles();
 app.UseRouting();
 
 app.UseSession();
-app.UseAuthentication(); 
+//app.UseAuthentication(); 
 app.UseAuthorization();
 
 

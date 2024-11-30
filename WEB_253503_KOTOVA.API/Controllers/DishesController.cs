@@ -75,6 +75,18 @@ namespace WEB_253503_KOTOVA.API.Controllers
             await _productService.DeleteProductAsync(id);
             return NoContent();
         }
+
+        [HttpGet("all")]
+        [AllowAnonymous]
+        public async Task<ActionResult<ResponseData<List<Dish>>>> GetAllDishes()
+        {
+            var response = await _productService.GetAllProductsAsync();
+            if (!response.Successfull)
+            {
+                return NotFound(response.ErrorMessage);
+            }
+            return Ok(response);
+        }
     }
 
 }
