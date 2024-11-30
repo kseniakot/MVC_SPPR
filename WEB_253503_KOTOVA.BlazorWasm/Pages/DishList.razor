@@ -2,23 +2,18 @@
 @using System.Text.Json
 @using WEB_253503_KOTOVA.Domain.Entities
 @using WEB_253503_KOTOVA.Domain.Models
-@inject HttpClient Http
+
+@inject IDataService DataService
 
 <h3>Блюда дня</h3>
 
-@if (IsLoading)
+
+@if (DataService.Dishes == null || DataService.Dishes.Count == 0)
 {
-    <div class="spinner-border text-primary" role="status">
-        <span class="visually-hidden">Loading...</span>
-    </div>
+    <p>No dishes available.</p>
 }
-else if (!string.IsNullOrEmpty(ErrorMessage))
-{
-    <div class="alert alert-danger" role="alert">
-        @ErrorMessage
-    </div>
-}
-else if (Dishes != null && Dishes.Any())
+
+else 
 {
     <table class="table table-striped table-hover">
         <thead class="table-dark">
@@ -28,7 +23,7 @@ else if (Dishes != null && Dishes.Any())
             </tr>
         </thead>
         <tbody>
-            @foreach (var dish in Dishes)
+            @foreach (var dish in DataService.Dishes)
             {
                 <tr>
                     <td>@dish.Name</td>
@@ -38,42 +33,12 @@ else if (Dishes != null && Dishes.Any())
         </tbody>
     </table>
 }
-else
+
+@if (!string.IsNullOrEmpty(DataService.ErrorMessage))
 {
-    <div class="alert alert-info" role="alert">
-        No dishes available.
-    </div>
+    <p class="text-danger">@DataService.ErrorMessage</p>
 }
 
-
-
 @code {
-    private List<Dish>? Dishes;
-    private bool IsLoading = true;
-    private string? ErrorMessage;
-    protected override async Task OnInitializedAsync()
-    {
-        try
-        {
-            IsLoading = true;
-
-            var response = await Http.GetFromJsonAsync<ResponseData<List<Dish>>>("https://localhost:7002/api/dishes/all");
-            if (response?.Successfull == true && response.Data != null)
-            {
-                Dishes = response.Data;
-            }
-            else
-            {
-                ErrorMessage = response?.ErrorMessage ?? "No dishes found.";
-            }
-        }
-        catch (Exception ex)
-        {
-            ErrorMessage = $"Error loading dishes: {ex.Message}";
-        }
-        finally
-        {
-            IsLoading = false;
-        }
-    }
+    protected override async Task OnInitializedAsync() => await DataService.GetProductListAsync();
 }
