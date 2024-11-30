@@ -1,16 +1,33 @@
 ﻿@page "/menu"
 @using Microsoft.AspNetCore.Authorization
+@using WEB_253503_KOTOVA.Domain.Entities
 @attribute [Authorize]
 <h3>Меню дня</h3>
-<CategorySelector/>
-<DishList/>
-<Pager/>
+
+<CategorySelector />
+
+<!-- Передаем метод для обработки выбора блюда -->
+<DishList OnDishSelected="OnDishSelected" />
+<Pager />
+
+<!-- Отображаем информацию о выбранном блюде -->
+@if (SelectedDish != null)
+{
+    <DishDetails SelectedDish="SelectedDish" />
+}
 
 @code {
-[Inject] IDataService? DataService { get; set; }
+    [Inject] IDataService DataService { get; set; }
+    private Dish SelectedDish { get; set; }
 
-protected override async Task OnInitializedAsync()
-{
-    await DataService.GetProductListAsync();
-}
+    // Метод вызывается при выборе блюда
+    private void OnDishSelected(int id)
+    {
+        SelectedDish = DataService.Dishes.FirstOrDefault(d => d.Id == id);
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await DataService.GetProductListAsync();
+    }
 }

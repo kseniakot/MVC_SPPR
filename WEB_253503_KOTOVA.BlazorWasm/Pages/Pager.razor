@@ -6,36 +6,27 @@
 {
     <nav aria-label="Page navigation example">
         <ul class="pagination">
-            <!-- First Page Button -->
             <li class="page-item @(DataService.CurrentPage == 1 ? "disabled" : "")">
                 <button class="page-link" @onclick="() => GoToPage(1)" aria-label="First">
                     <span aria-hidden="true">&laquo;&laquo;</span>
                 </button>
             </li>
-
-            <!-- Previous Page Button -->
             <li class="page-item @(DataService.CurrentPage == 1 ? "disabled" : "")">
                 <button class="page-link" @onclick="() => GoToPage(DataService.CurrentPage - 1)" aria-label="Previous">
                     <span aria-hidden="true">&laquo;</span>
                 </button>
             </li>
-
-            <!-- Page Number Buttons -->
             @for (int i = 1; i <= DataService.TotalPages; i++)
             {
                 <li class="page-item @(i == DataService.CurrentPage ? "active" : "")">
                     <button class="page-link" @onclick="() => GoToPage(i)">@i</button>
                 </li>
             }
-
-            <!-- Next Page Button -->
             <li class="page-item @(DataService.CurrentPage == DataService.TotalPages ? "disabled" : "")">
                 <button class="page-link" @onclick="() => GoToPage(DataService.CurrentPage + 1)" aria-label="Next">
                     <span aria-hidden="true">&raquo;</span>
                 </button>
             </li>
-
-            <!-- Last Page Button -->
             <li class="page-item @(DataService.CurrentPage == DataService.TotalPages ? "disabled" : "")">
                 <button class="page-link" @onclick="() => GoToPage(DataService.TotalPages)" aria-label="Last">
                     <span aria-hidden="true">&raquo;&raquo;</span>

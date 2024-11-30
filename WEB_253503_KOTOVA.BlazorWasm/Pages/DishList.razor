@@ -1,26 +1,18 @@
-﻿@page "/dishes"
-@using System.Text.Json
-@using WEB_253503_KOTOVA.Domain.Entities
-@using WEB_253503_KOTOVA.Domain.Models
-@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+﻿@using WEB_253503_KOTOVA.Domain.Entities
 @inject IDataService DataService
-@implements IDisposable
 
-
-<AuthorizeView>
-    <Authorized>
 @if (DataService.Dishes == null || DataService.Dishes.Count == 0)
 {
     <p>No dishes available.</p>
 }
-
-else 
+else
 {
     <table class="table table-striped table-hover">
         <thead class="table-dark">
             <tr>
                 <th>Name</th>
                 <th>Description</th>
+                <th>Action</th>
             </tr>
         </thead>
         <tbody>
@@ -29,31 +21,18 @@ else
                 <tr>
                     <td>@dish.Name</td>
                     <td>@dish.Description</td>
+                    <td>
+                        <!-- При нажатии на кнопку вызываем обработчик -->
+                        <button class="btn btn-primary" @onclick="() => OnDishSelected.InvokeAsync(dish.Id)">
+                            Подробнее
+                        </button>
+                    </td>
                 </tr>
             }
         </tbody>
     </table>
 }
 
-@if (!string.IsNullOrEmpty(DataService.ErrorMessage))
-{
-    <p class="text-danger">@DataService.ErrorMessage</p>
-}
-</Authorized>
-    <NotAuthorized>
-        <p class="text-warning">You are not authorized to view this page. Please log in.</p>
-    </NotAuthorized>
-
-</AuthorizeView>
 @code {
-    protected override void OnInitialized()
-    {
-       
-        DataService.DataLoaded += StateHasChanged;
-    }
-  
-    public void Dispose()
-    {
-        DataService.DataLoaded -= StateHasChanged;
-    }
+    [Parameter] public EventCallback<int> OnDishSelected { get; set; }
 }
