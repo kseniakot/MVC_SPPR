@@ -77,7 +77,7 @@ namespace WEB_253503_KOTOVA.API.Controllers
         }
 
         [HttpGet("all")]
-        [AllowAnonymous]
+        [Authorize]
         public async Task<ActionResult<ResponseData<List<Dish>>>> GetAllDishes()
         {
             var response = await _productService.GetAllProductsAsync();

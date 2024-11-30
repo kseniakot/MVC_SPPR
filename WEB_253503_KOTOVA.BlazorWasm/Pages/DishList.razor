@@ -2,12 +2,13 @@
 @using System.Text.Json
 @using WEB_253503_KOTOVA.Domain.Entities
 @using WEB_253503_KOTOVA.Domain.Models
-
+@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
 @inject IDataService DataService
 
 <h3>Блюда дня</h3>
 
-
+<AuthorizeView>
+    <Authorized>
 @if (DataService.Dishes == null || DataService.Dishes.Count == 0)
 {
     <p>No dishes available.</p>
@@ -38,7 +39,12 @@ else
 {
     <p class="text-danger">@DataService.ErrorMessage</p>
 }
+</Authorized>
+    <NotAuthorized>
+        <p class="text-warning">You are not authorized to view this page. Please log in.</p>
+    </NotAuthorized>
 
+</AuthorizeView>
 @code {
     protected override async Task OnInitializedAsync() => await DataService.GetProductListAsync();
 }

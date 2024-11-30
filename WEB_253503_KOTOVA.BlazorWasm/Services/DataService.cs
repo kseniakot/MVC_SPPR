@@ -3,6 +3,8 @@ using System.Text;
 using WEB_253503_KOTOVA.Domain.Entities;
 using WEB_253503_KOTOVA.Domain.Models;
 using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
+using Microsoft.AspNetCore.WebUtilities;
 
 namespace WEB_253503_KOTOVA.BlazorWasm.Services
 {
@@ -10,6 +12,7 @@ namespace WEB_253503_KOTOVA.BlazorWasm.Services
     {
         private readonly HttpClient _httpClient;
         private readonly int _pageSize;
+        private readonly IAccessTokenProvider _tokenProvider;
 
         public event Action DataLoaded;
         public List<Category> Categories { get; set; } = new();
@@ -20,39 +23,33 @@ namespace WEB_253503_KOTOVA.BlazorWasm.Services
         public int CurrentPage { get; set; }
         public Category SelectedCategory { get; set; }
 
-        public DataService(HttpClient httpClient, IConfiguration configuration)
+        public DataService(HttpClient httpClient, IConfiguration configuration, IAccessTokenProvider tokenProvider)
         {
             _httpClient = httpClient;
             _pageSize = int.Parse(configuration["ItemsPerPage"] ?? "3");
+            _tokenProvider = tokenProvider;
+        }
+        private async Task<bool> AttachAccessTokenAsync()
+        {
+            var tokenRequest = await _tokenProvider.RequestAccessToken();
+            if (tokenRequest.TryGetToken(out var token))
+            {
+                _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token.Value);
+                return true;
+            }
+            return false;
         }
 
-        public async Task GetAllProductsAsync()
-        {
-            try
-            {
-                var response = await _httpClient.GetFromJsonAsync<ResponseData<List<Dish>>>("dishes/all");
-                if (response?.Successfull == true)
-                {
-                    Dishes = response.Data ?? new List<Dish>();
-                    Success = true;
-                }
-                else
-                {
-                    Dishes = new List<Dish>();
-                    ErrorMessage = response?.ErrorMessage ?? "Failed to fetch dishes.";
-                    Success = false;
-                }
-                DataLoaded?.Invoke();
-            }
-            catch (Exception ex)
-            {
-                ErrorMessage = ex.Message;
-                Success = false;
-            }
-        }
+       
 
         public async Task GetProductListAsync(int pageNo = 1)
         {
+            if (!await AttachAccessTokenAsync())
+            {
+                ErrorMessage = "Access denied. Please log in.";
+                Success = false;
+                return;
+            }
             try
             {
                 var route = new StringBuilder("dishes/");
